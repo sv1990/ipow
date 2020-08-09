@@ -29,7 +29,7 @@ requires((std::integral<F> || std::floating_point<F>)&&std::integral<I>) //
     return y * y;
   }
   else {
-    F y = ipow(x, (n - 1) / 2);
+    F y = ipow(x, n / 2);
     return y * y * x;
   }
 }
@@ -52,7 +52,7 @@ requires((std::integral<F> ||
     return y * y;
   }
   else {
-    F y = ipow<(n - 1) / 2>(x);
+    F y = ipow<n / 2>(x);
     return y * y * x;
   }
 }
