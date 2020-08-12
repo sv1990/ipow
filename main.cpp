@@ -18,19 +18,19 @@ requires((std::integral<F> || std::floating_point<F>)&&std::integral<I>) //
   if (n == 0) {
     return 1;
   }
-  else if (n == 1) {
-    return x;
+  if (n < 0) {
+    x = F(1) / x;
+    n = -n;
   }
-  else if (n < 0) {
-    return ipow(F(1.) / x, -n);
-  }
-  else if (n % 2 == 0) {
-    F y = ipow(x, n / 2);
-    return y * y;
-  }
-  else {
-    F y = ipow(x, n / 2);
-    return y * y * x;
+  F z = 1;
+  while (true) {
+    if (n == 1) {
+      return x * z;
+    }
+    F arr[] = {1, x};
+    z *= arr[n % 2];
+    x *= x;
+    n /= 2;
   }
 }
 
