@@ -1,20 +1,15 @@
 #include <iostream>
 
-#if __has_include(<concepts>)
-#  include <concepts>
-#else
-#  include <type_traits>
-namespace std {
+#include <type_traits>
+
 template <typename T>
 concept integral = std::is_integral_v<T>;
-template <typename T>
-concept floating_point = is_floating_point_v<T>;
-} // namespace std
-#endif
 
-template <typename F, typename I>
-requires((std::integral<F> || std::floating_point<F>)&&std::integral<I>) //
-    constexpr F ipow(F x, I n) noexcept {
+template <typename T>
+concept arithmetic = std::is_arithmetic_v<T>;
+
+template <arithmetic F>
+constexpr F ipow(F x, integral auto n) noexcept {
   if (n == 0) {
     return 1;
   }
@@ -34,10 +29,8 @@ requires((std::integral<F> || std::floating_point<F>)&&std::integral<I>) //
   }
 }
 
-template <auto n, typename F>
-requires((std::integral<F> ||
-          std::floating_point<F>)&&std::integral<std::decay_t<decltype(n)>>) //
-    constexpr F ipow(F x) noexcept {
+template <integral auto n, arithmetic F>
+constexpr F ipow(F x) noexcept {
   if constexpr (n == 0) {
     return 1;
   }
