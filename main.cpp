@@ -1,58 +1,47 @@
+#include "ipow.hh"
+
 #include <iostream>
-
-#include <type_traits>
-
-template <typename T>
-concept integral = std::is_integral_v<T>;
-
-template <typename T>
-concept arithmetic = std::is_arithmetic_v<T>;
-
-template <arithmetic F>
-constexpr F ipow(F x, integral auto n) noexcept {
-  if (n == 0) {
-    return 1;
-  }
-  if (n < 0) {
-    x = F(1) / x;
-    n = -n;
-  }
-  F z = 1;
-  while (true) {
-    if (n == 1) {
-      return x * z;
-    }
-    F arr[] = {1, x};
-    z *= arr[n % 2];
-    x *= x;
-    n /= 2;
-  }
-}
-
-template <integral auto n, arithmetic F>
-constexpr F ipow(F x) noexcept {
-  if constexpr (n == 0) {
-    return 1;
-  }
-  else if constexpr (n == 1) {
-    return x;
-  }
-  else if constexpr (n < 0) {
-    return ipow<-n>(F(1.) / x);
-  }
-  else if constexpr (n % 2 == 0) {
-    F y = ipow<n / 2>(x);
-    return y * y;
-  }
-  else {
-    F y = ipow<n / 2>(x);
-    return y * y * x;
-  }
-}
+#include <algorithm>
+#include <chrono>
+#include <cmath>
+#include <random>
 
 int main(int, char**) {
-  std::cout << ipow<3>(2) << '\n';
-  for (int n = -10; n < 10; ++n) {
-    std::cout << "2 ** " << n << " = " << ipow(2., n) << '\n';
+  std::mt19937_64 gen(std::random_device{}());
+  std::vector<double> bases;
+  std::generate_n(std::back_inserter(bases), 10000, [&]() mutable {
+    return std::uniform_real_distribution<double>{0, 10}(gen);
+  });
+
+  std::vector<long> exponents;
+  std::generate_n(std::back_inserter(exponents), 10000, [&]() mutable {
+    return std::uniform_int_distribution<long>{-20, 20}(gen);
+  });
+
+  auto t1 = std::chrono::high_resolution_clock::now();
+
+  double x1 = 0;
+  for (auto x : bases) {
+    for (auto n : exponents) {
+      x1 += std::pow(x, n);
+    }
   }
+  auto t2 = std::chrono::high_resolution_clock::now();
+
+  double x2 = 0;
+  for (auto x : bases) {
+    for (auto n : exponents) {
+      x2 += ipow(x, n);
+    }
+  }
+
+  auto t3 = std::chrono::high_resolution_clock::now();
+  std::cout
+      << x1 << ' '
+      << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count()
+      << "ms\n";
+  std::cout
+      << x2 << ' '
+      << std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2).count()
+      << "ms\n";
 }
