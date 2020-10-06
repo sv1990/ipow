@@ -21,9 +21,9 @@ template <arithmetic F>
   F z = 1;
   while (n != 1) {
     F arr[] = {1, x};
-    z *= arr[n % 2];
+    z *= arr[n & 1];
     x *= x;
-    n /= 2;
+    n >>= 1;
   }
   return x * z;
 }
