@@ -10,7 +10,7 @@ template <typename T>
 concept arithmetic = std::is_arithmetic_v<T>;
 
 template <arithmetic F>
-constexpr F ipow(F x, integral auto n) noexcept {
+[[nodiscard]] constexpr F ipow(F x, integral auto n) noexcept {
   if (n == 0) {
     return 1;
   }
@@ -29,7 +29,7 @@ constexpr F ipow(F x, integral auto n) noexcept {
 }
 
 template <integral auto n, arithmetic F>
-constexpr F ipow(F x) noexcept {
+[[nodiscard]] constexpr F ipow(F x) noexcept {
   if constexpr (n == 0) {
     return 1;
   }
