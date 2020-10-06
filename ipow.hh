@@ -14,10 +14,10 @@ template <arithmetic F, integral I>
   if (n == 0) {
     return 1;
   }
-  F xs[] = {x, F(1) / x};
-  x      = xs[n < 0];
-  I ns[] = {n, -n};
-  n      = ns[n < 0];
+  if (n < 0) {
+    x = F(1) / x;
+    n = -n;
+  }
 
   F z = 1;
   while (n != 1) {
