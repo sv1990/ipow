@@ -19,15 +19,13 @@ constexpr F ipow(F x, integral auto n) noexcept {
     n = -n;
   }
   F z = 1;
-  while (true) {
-    if (n == 1) {
-      return x * z;
-    }
+  while (n != 1) {
     F arr[] = {1, x};
     z *= arr[n % 2];
     x *= x;
     n /= 2;
   }
+  return x * z;
 }
 
 template <integral auto n, arithmetic F>
@@ -50,6 +48,5 @@ constexpr F ipow(F x) noexcept {
     return y * y * x;
   }
 }
-
 
 #endif // IPOW_IPOW_HH_1601928545
