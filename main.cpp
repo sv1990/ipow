@@ -23,7 +23,8 @@ int main(int, char**) {
 
   std::vector<exponent_t> exponents;
   std::generate_n(std::back_inserter(exponents), 10000, [&]() mutable {
-    return std::uniform_int_distribution<exponent_t>{-20, 20}(gen);
+    return std::uniform_int_distribution<exponent_t>{
+        std::is_signed_v<exponent_t> ? -20 : 0, 20}(gen);
   });
 
   auto t1 = std::chrono::high_resolution_clock::now();
