@@ -40,7 +40,7 @@ int main(int, char**) {
   base_t x2 = 0;
   for (auto x : bases) {
     for (auto n : exponents) {
-      x2 += ipow(x, n);
+      x2 += ipow::ipow(x, n);
     }
   }
 

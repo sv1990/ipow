@@ -3,6 +3,7 @@
 
 #include <type_traits>
 
+namespace ipow {
 template <typename T>
 concept integral = std::is_integral_v<T>;
 
@@ -49,5 +50,6 @@ template <integral auto n, arithmetic F>
     return y * y * x;
   }
 }
+} // namespace ipow
 
 #endif // IPOW_IPOW_HH_1601928545
