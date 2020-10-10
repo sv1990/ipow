@@ -18,6 +18,13 @@ template <arithmetic F, integral I>
 template <typename F, typename I>
 #endif
 [[nodiscard]] constexpr F ipow(F x, I n) noexcept {
+#ifndef __cpp_concepts
+  static_assert(std::is_arithmetic_v<F>,
+                "The base should be an arithmetic type");
+  static_assert(std::is_integral_v<I>,
+                "The exponent should be an integral type. Use std::pow for "
+                "floating point exponents");
+#endif
   if (n == 0) {
     return 1;
   }
@@ -42,6 +49,13 @@ template <integral auto n, arithmetic F>
 template <auto n, typename F>
 #endif
 [[nodiscard]] constexpr F ipow(F x) noexcept {
+#ifndef __cpp_concepts
+  static_assert(std::is_arithmetic_v<F>,
+                "The base should be an arithmetic type");
+  static_assert(std::is_integral_v<decltype(n)>,
+                "The exponent should be an integral type. Use std::pow for "
+                "floating point exponents");
+#endif
   if constexpr (n == 0) {
     return 1;
   }
