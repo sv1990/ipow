@@ -4,14 +4,20 @@
 #include <type_traits>
 
 namespace ipow {
+#ifdef __cpp_concepts
 template <typename T>
 concept integral = std::is_integral_v<T>;
 
 template <typename T>
 concept arithmetic = std::is_arithmetic_v<T>;
+#endif
 
-template <arithmetic F>
-[[nodiscard]] constexpr F ipow(F x, integral auto n) noexcept {
+#ifdef __cpp_concepts
+template <arithmetic F, integral I>
+#else
+template <typename F, typename I>
+#endif
+[[nodiscard]] constexpr F ipow(F x, I n) noexcept {
   if (n == 0) {
     return 1;
   }
@@ -30,7 +36,11 @@ template <arithmetic F>
   return x * z;
 }
 
+#ifdef __cpp_concepts
 template <integral auto n, arithmetic F>
+#else
+template <auto n, typename F>
+#endif
 [[nodiscard]] constexpr F ipow(F x) noexcept {
   if constexpr (n == 0) {
     return 1;
