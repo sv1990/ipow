@@ -19,6 +19,9 @@ concept floating_point = std::is_floating_point_v<T>;
 }
 
 [[nodiscard]] bool test(floating_point auto x, floating_point auto y) noexcept {
+  if (std::isinf(x) && std::isinf(y)) {
+    return true;
+  }
   return std::abs(x - y) / std::abs(y) < 1e-7;
 }
 
@@ -33,15 +36,10 @@ int main(int, char**) {
   });
 
   std::vector<exponent_t> exponents;
-  const exponent_t max_exponent = 20;
-  const exponent_t min_exponent = std::is_signed_v<exponent_t> ? -20 : 0;
+  const exponent_t max_exponent = 100;
+  const exponent_t min_exponent = std::is_signed_v<exponent_t> ? -100 : 0;
   exponents.resize(max_exponent - min_exponent);
   std::iota(begin(exponents), end(exponents), min_exponent);
-  
-  std::generate_n(std::back_inserter(exponents), 10000, [&]() mutable {
-    return std::uniform_int_distribution<exponent_t>{
-        std::is_signed_v<exponent_t> ? -20 : 0, 20}(gen);
-  });
 
   std::size_t failed = 0;
   for (auto x : bases) {
@@ -49,7 +47,9 @@ int main(int, char**) {
       auto result   = ipow::ipow(x, n);
       auto expected = std::pow(x, n);
       if (!test(result, expected)) {
-        std::cerr << "Failed for pow(" << x << ", " << n << ")\n";
+        std::cerr << "Failed for pow(" << x << ", " << n << ") with\n"
+                  << "result = " << result << "\nexpected = " << expected
+                  << '\n';
         if (++failed == 10) {
           break;
         }
