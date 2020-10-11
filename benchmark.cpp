@@ -45,12 +45,12 @@ int main(int, char**) {
   }
 
   auto t3 = std::chrono::high_resolution_clock::now();
-  std::cout << "  std::pow: "
-      << x1 << ' '
+  std::cout
+      << "  std::pow: " << x1 << ' '
       << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count()
       << "ms\n";
-  std::cout << "ipow::ipow: "
-      << x2 << ' '
+  std::cout
+      << "ipow::ipow: " << x2 << ' '
       << std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2).count()
       << "ms\n";
 }
