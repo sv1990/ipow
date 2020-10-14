@@ -43,13 +43,9 @@ auto res = ipow::ipow<n>(n);
 
 ## Benchmarks
 
-The benchmarks were performed with gcc 10.2.0 and clang 10.0.1. The flags used were `--std=c++20 -O3` for Release mode and `--std=c++20 -O1` for Debug mode. Only the version with variable exponent was benchmarked. `long` is used as the signed exponent and `unsigned long` as the unsigned exponent. For `std::pow` the signness doesn't make a difference since it is casted to `double` either way.
+The benchmarks were performed with gcc 10.2.0 and clang 10.0.1. Only the version with variable exponent was benchmarked. `std::pow` uses constant time except when raising to the zeroth power. `ipow::ipow` shows logarithmic time increase but is much faster than `std::pow`.
 
-| Function                         | GCC (Debug) | GCC (Release) | Clang (Debug) | Clang (Release) |
-| -------------------------------- | ----------- | ------------- | ------------- | --------------- |
-| `std::pow`                       | 1723ms      | 1745ms        | 2555ms        | 1746ms          |
-| `ipow::ipow` (signed exponent)   | 908ms       | 933ms         | 1805ms        | 1000ms          |
-| `ipow::ipow` (unsigned exponent) | 616ms       | 583ms         | 1445ms        | 650ms           |
+![gcc](/Users/semirvrana/Programs/ipow/extras/gcc.png)
 
-
+![clang](/Users/semirvrana/Programs/ipow/extras/clang.png)
 
