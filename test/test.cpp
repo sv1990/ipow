@@ -27,7 +27,7 @@ TEST_CASE("testing the factorial function") {
       const auto result   = ipow::ipow(base, exponent);
       const auto expected = std::pow(base, exponent);
       if (std::isinf(expected)) {
-        CHECK(isinf(result));
+        CHECK(std::isinf(result));
       }
       else {
         CHECK(doctest::Approx(result) == expected);
