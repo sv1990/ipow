@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.14)
 
 add_executable(ipow_test test.cpp)
 target_compile_features(ipow_test PRIVATE cxx_std_20)
