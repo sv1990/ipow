@@ -1,58 +1,36 @@
 #include "ipow.hh"
 
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include <doctest/doctest.h>
+
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <numeric>
 #include <random>
 
-template <typename T>
-using uniform_arithmetic_distribution =
-    std::conditional_t<std::is_integral_v<T>, std::uniform_int_distribution<T>,
-                       std::uniform_real_distribution<T>>;
-
-template <typename T>
-concept floating_point = std::is_floating_point_v<T>;
-
-[[nodiscard]] bool test(auto x, auto y) noexcept {
-  return x == y;
-}
-
-[[nodiscard]] bool test(floating_point auto x, floating_point auto y) noexcept {
-  if (std::isinf(x) && std::isinf(y)) {
-    return true;
-  }
-  return std::abs(x - y) / std::abs(y) < 1e-7;
-}
-
-int main(int, char**) {
-  using base_t     = double;
-  using exponent_t = long;
-
+TEST_CASE("testing the factorial function") {
   std::mt19937_64 gen(std::random_device{}());
-  std::vector<base_t> bases;
+  std::vector<double> bases;
   std::generate_n(std::back_inserter(bases), 10000, [&]() mutable {
-    return uniform_arithmetic_distribution<base_t>{0, 10}(gen);
+    return std::uniform_real_distribution<double>{0, 10}(gen);
   });
 
-  std::vector<exponent_t> exponents;
-  const exponent_t max_exponent = 100;
-  const exponent_t min_exponent = std::is_signed_v<exponent_t> ? -100 : 0;
-  exponents.resize(max_exponent - min_exponent);
+  std::vector<int> exponents;
+  const int max_exponent = 100;
+  const int min_exponent = -100;
+  exponents.resize(max_exponent - min_exponent + 1);
   std::iota(begin(exponents), end(exponents), min_exponent);
 
-  std::size_t failed = 0;
-  for (auto x : bases) {
-    for (auto n : exponents) {
-      auto result   = ipow::ipow(x, n);
-      auto expected = std::pow(x, n);
-      if (!test(result, expected)) {
-        std::cerr << "Failed for pow(" << x << ", " << n << ") with\n"
-                  << "result = " << result << "\nexpected = " << expected
-                  << '\n';
-        if (++failed == 10) {
-          break;
-        }
+  for (auto base : bases) {
+    for (auto exponent : exponents) {
+      const auto result   = ipow::ipow(base, exponent);
+      const auto expected = std::pow(base, exponent);
+      if (std::isinf(expected)) {
+        CHECK(isinf(result));
+      }
+      else {
+        CHECK(doctest::Approx(result) == expected);
       }
     }
   }

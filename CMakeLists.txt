@@ -7,5 +7,6 @@ add_library(ipow INTERFACE)
 add_library(ipow::ipow ALIAS ipow)
 target_include_directories(ipow INTERFACE include)
 
-add_subdirectory(test)
 add_subdirectory(benchmark)
+enable_testing()
+add_subdirectory(test)
