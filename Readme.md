@@ -45,7 +45,7 @@ auto res = ipow::ipow<n>(n);
 
 The benchmarks were performed with gcc 10.2.0 and clang 10.0.1. Only the version with variable exponent was benchmarked. `std::pow` uses constant time except when raising to the zeroth power. `ipow::ipow` shows logarithmic time increase but is much faster than `std::pow`.
 
-![gcc](/Users/semirvrana/Programs/ipow/extras/gcc.png)
+![gcc](https://raw.githubusercontent.com/sv1990/ipow/main/extras/gcc.png)
 
-![clang](/Users/semirvrana/Programs/ipow/extras/clang.png)
+![clang](https://raw.githubusercontent.com/sv1990/ipow/main/extras/clang.png)
 
