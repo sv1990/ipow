@@ -5,30 +5,24 @@
 
 namespace ipow {
 #ifdef __cpp_concepts
-template <typename T>
-concept integral = std::is_integral_v<T>;
-
-template <typename T>
-concept arithmetic = std::is_arithmetic_v<T>;
-
-#define IPOW_INTEGRAL integral
-#define IPOW_INTEGRAL_AUTO integral auto
-#define IPOW_ARITHMETIC arithmetic
-#else 
-#define IPOW_INTEGRAL typename
-#define IPOW_INTEGRAL_AUTO auto
-#define IPOW_ARITHMETIC typename
+#  define IPOW_TEMPLATE(...) template <__VA_ARGS__>
+#  define IPOW_REQUIRES(...) requires(__VA_ARGS__)
+#  define IPOW_CONCEPT       concept
+#else
+#  define IPOW_TEMPLATE(...) template <__VA_ARGS__
+#  define IPOW_REQUIRES(...) , std::enable_if_t<__VA_ARGS__>* = nullptr >
+#  define IPOW_CONCEPT       inline constexpr bool
 #endif
 
-template <IPOW_ARITHMETIC F, IPOW_INTEGRAL I>
+template <typename T>
+IPOW_CONCEPT integral = std::is_integral_v<T>;
+
+template <typename T>
+IPOW_CONCEPT arithmetic = std::is_arithmetic_v<T>;
+
+IPOW_TEMPLATE(typename F, typename I)
+IPOW_REQUIRES(arithmetic<F>&& integral<I>)
 [[nodiscard]] constexpr F ipow(F x, I n) noexcept {
-#ifndef __cpp_concepts
-  static_assert(std::is_arithmetic_v<F>,
-                "The base should be an arithmetic type");
-  static_assert(std::is_integral_v<I>,
-                "The exponent should be an integral type. Use std::pow for "
-                "floating point exponents");
-#endif
   if (n == 0) {
     return 1;
   }
@@ -47,15 +41,9 @@ template <IPOW_ARITHMETIC F, IPOW_INTEGRAL I>
   return x * z;
 }
 
-template <IPOW_INTEGRAL_AUTO n, IPOW_ARITHMETIC F>
+IPOW_TEMPLATE(auto n, typename F)
+IPOW_REQUIRES(integral<decltype(n)>&& arithmetic<F>)
 [[nodiscard, gnu::always_inline]] constexpr F ipow(F x) noexcept {
-#ifndef __cpp_concepts
-  static_assert(std::is_arithmetic_v<F>,
-                "The base should be an arithmetic type");
-  static_assert(std::is_integral_v<decltype(n)>,
-                "The exponent should be an integral type. Use std::pow for "
-                "floating point exponents");
-#endif
   if constexpr (n == 0) {
     return 1;
   }
