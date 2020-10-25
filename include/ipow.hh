@@ -48,7 +48,7 @@ template <integral auto n, arithmetic F>
 #else
 template <auto n, typename F>
 #endif
-[[nodiscard]] constexpr F ipow(F x) noexcept {
+[[nodiscard, gnu::always_inline]] constexpr F ipow(F x) noexcept {
 #ifndef __cpp_concepts
   static_assert(std::is_arithmetic_v<F>,
                 "The base should be an arithmetic type");
