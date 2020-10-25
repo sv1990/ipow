@@ -10,13 +10,17 @@ concept integral = std::is_integral_v<T>;
 
 template <typename T>
 concept arithmetic = std::is_arithmetic_v<T>;
+
+#define IPOW_INTEGRAL integral
+#define IPOW_INTEGRAL_AUTO integral auto
+#define IPOW_ARITHMETIC arithmetic
+#else 
+#define IPOW_INTEGRAL typename
+#define IPOW_INTEGRAL_AUTO auto
+#define IPOW_ARITHMETIC typename
 #endif
 
-#ifdef __cpp_concepts
-template <arithmetic F, integral I>
-#else
-template <typename F, typename I>
-#endif
+template <IPOW_ARITHMETIC F, IPOW_INTEGRAL I>
 [[nodiscard]] constexpr F ipow(F x, I n) noexcept {
 #ifndef __cpp_concepts
   static_assert(std::is_arithmetic_v<F>,
@@ -43,11 +47,7 @@ template <typename F, typename I>
   return x * z;
 }
 
-#ifdef __cpp_concepts
-template <integral auto n, arithmetic F>
-#else
-template <auto n, typename F>
-#endif
+template <IPOW_INTEGRAL_AUTO n, IPOW_ARITHMETIC F>
 [[nodiscard, gnu::always_inline]] constexpr F ipow(F x) noexcept {
 #ifndef __cpp_concepts
   static_assert(std::is_arithmetic_v<F>,
