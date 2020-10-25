@@ -10,7 +10,7 @@ namespace ipow {
 #  define IPOW_CONCEPT       concept
 #else
 #  define IPOW_TEMPLATE(...) template <__VA_ARGS__
-#  define IPOW_REQUIRES(...) , std::enable_if_t<__VA_ARGS__>* = nullptr >
+#  define IPOW_REQUIRES(...) , std::enable_if_t<__VA_ARGS__> * = nullptr >
 #  define IPOW_CONCEPT       inline constexpr bool
 #endif
 
@@ -21,7 +21,7 @@ template <typename T>
 IPOW_CONCEPT arithmetic = std::is_arithmetic_v<T>;
 
 IPOW_TEMPLATE(typename F, typename I)
-IPOW_REQUIRES(arithmetic<F>&& integral<I>)
+IPOW_REQUIRES(arithmetic<F> && integral<I>)
 [[nodiscard]] constexpr F ipow(F x, I n) noexcept {
   if (n == 0) {
     return 1;
@@ -42,7 +42,7 @@ IPOW_REQUIRES(arithmetic<F>&& integral<I>)
 }
 
 IPOW_TEMPLATE(auto n, typename F)
-IPOW_REQUIRES(integral<decltype(n)>&& arithmetic<F>)
+IPOW_REQUIRES(integral<decltype(n)> && arithmetic<F>)
 [[nodiscard, gnu::always_inline]] constexpr F ipow(F x) noexcept {
   if constexpr (n == 0) {
     return 1;
