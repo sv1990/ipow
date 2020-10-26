@@ -3,7 +3,6 @@
 
 #include <type_traits>
 
-namespace ipow {
 #ifdef __cpp_concepts
 #  define IPOW_TEMPLATE(...) template <__VA_ARGS__>
 #  define IPOW_REQUIRES(...) requires(__VA_ARGS__)
@@ -13,6 +12,8 @@ namespace ipow {
 #  define IPOW_REQUIRES(...) , std::enable_if_t<__VA_ARGS__> * = nullptr >
 #  define IPOW_CONCEPT       inline constexpr bool
 #endif
+
+namespace ipow {
 
 template <typename T>
 IPOW_CONCEPT integral = std::is_integral_v<T>;
@@ -63,5 +64,9 @@ IPOW_REQUIRES(integral<decltype(n)> && arithmetic<F>)
   }
 }
 } // namespace ipow
+
+#undef IPOW_TEMPLATE
+#undef IPOW_REQUIRES
+#undef IPOW_CONCEPT
 
 #endif // IPOW_IPOW_HH_1601928545
