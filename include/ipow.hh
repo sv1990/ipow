@@ -9,7 +9,7 @@
 #  define IPOW_CONCEPT       concept
 #else
 #  define IPOW_TEMPLATE(...) template <__VA_ARGS__
-#  define IPOW_REQUIRES(...) , std::enable_if_t<__VA_ARGS__> * = nullptr >
+#  define IPOW_REQUIRES(...) , std::enable_if_t<__VA_ARGS__>* = nullptr >
 #  define IPOW_CONCEPT       inline constexpr bool
 #endif
 
